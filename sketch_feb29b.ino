@@ -23,3 +23,7 @@ void loop() {
 
   delay(1000);
 }
+
+// I = V/R = 5V/220 ohm
+// I = 5/220 = 0.0227 A ungefär för varje diod
+// Strömmen är ca 22.7 mA milliampeere per diod
