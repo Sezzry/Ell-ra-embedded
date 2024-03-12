@@ -11,12 +11,14 @@ int lastButtonState_7 = HIGH;
 int lastButtonState_13 = HIGH;
 unsigned long lastDebounceTime_7 = 0;
 unsigned long lastDebounceTime_13 = 0;
-int debounceDelay = 50;  
+int debounceDelay = 50;
 int ledState_9 = LOW;
 int ledState_13 = LOW;
 int potValue = 0;
 bool button1Enabled = true;
 bool button2Enabled = true;
+
+int currentPower = 0; 
 
 void setup() {
   pinMode(LED_PIN_9, OUTPUT);
@@ -67,12 +69,12 @@ void loop() {
   lastButtonState_13 = reading_13;
 
   potValue = analogRead(POTENTIOMETER_PIN);
-  int pwmOutput = map(potValue, 0, 255, 0, 10);
+  int pwmOutput = map(potValue, 0, 1023, 0, 255); 
   analogWrite(PWM_OUTPUT_PIN, pwmOutput);
 
-  Serial.print("Potentiometer Value (Lumen): ");
+  Serial.print("Potentiometer Value: ");
   Serial.println(potValue);
-  delay(500);  
+  delay(500);
 
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
@@ -107,19 +109,19 @@ void processCommand(String command) {
     Serial.println("LED 2 turned off");
   } else if (command.startsWith("led power ")) {
     int targetPower = command.substring(10).toInt();
-    int currentPower = analogRead(PWM_OUTPUT_PIN);
-  
+
     for (int i = 0; i <= 100; ++i) {
-        int intermediatePower = map(i, 0, 100, currentPower, targetPower);
-        analogWrite(PWM_OUTPUT_PIN, intermediatePower);
-        delay(20); 
+      int intermediatePower = map(i, 0, 100, currentPower, targetPower);
+      analogWrite(PWM_OUTPUT_PIN, intermediatePower);
+      delay(20);
     }
-    
+
+    currentPower = targetPower; 
     Serial.print("LED Power set to ");
     Serial.println(targetPower);
-    delay(100);  
+    delay(100);
   } else {
     Serial.println("Unknown command");
-    delay(100);  
+    delay(100);
   }
 }
