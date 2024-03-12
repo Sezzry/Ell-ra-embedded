@@ -68,7 +68,7 @@ void loop() {
   int pwmOutput = map(potValue, 0, 1023, 0, 255);
   analogWrite(PWM_OUTPUT_PIN, pwmOutput);
 
-  Serial.print("Potentiometer Value (Lumen): ");
+  Serial.print("Potentiometer Value: ");
   Serial.println(potValue);
 
   delay(100);
