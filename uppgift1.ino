@@ -1,6 +1,6 @@
-const int redLedPin = 9;  
-const int greenLedPin = 10; 
-const int blueLedPin = 11;  
+const int redLedPin = 11;  
+const int greenLedPin = 9; 
+const int blueLedPin = 3;  
 
 void setup() {
   pinMode(redLedPin, OUTPUT);
@@ -23,3 +23,7 @@ void loop() {
 
   delay(1000);
 }
+
+// I = V/R = 5V/220 ohm
+// I = 5/220 = 0.0227 A ungefär för varje diod
+// Strömmen är ca 22.7 mA milliampeere per diod
