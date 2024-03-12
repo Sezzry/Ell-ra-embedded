@@ -1,9 +1,9 @@
-const int BUTTON_PIN_7 = 7;
-const int BUTTON_PIN_13 = 13;
+const int BUTTON_PIN_7 = 2;
+const int BUTTON_PIN_13 = 3;
 const int LED_PIN_9 = 9;
 const int LED_PIN_11 = 11;
 const int POTENTIOMETER_PIN = A0;
-const int PWM_OUTPUT_PIN = 3;
+const int PWM_OUTPUT_PIN = 6;
 
 int buttonState_7 = HIGH;
 int buttonState_13 = HIGH;
