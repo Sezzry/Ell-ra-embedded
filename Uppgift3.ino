@@ -1,15 +1,19 @@
-const int buttonPin1 = 13; 
-const int buttonPin2 = 7;  
-const int potPin = A0;    
-const int ledPinR = 11;    
-const int ledPinG = 9;     
-const int ledPinB = 3;     
+const int buttonPin1 = 13;
+const int buttonPin2 = 7;
+const int potPin = A0;
+const int ledPinR = 11;
+const int ledPinG = 9;
+const int ledPinB = 3;
 
-int buttonState1 = 0;      
-int buttonState2 = 0;      
-int lastButtonState1 = 0;  
-int lastButtonState2 = 0;  
-int potValue = 0;          
+int buttonState1 = 0;
+int buttonState2 = 0;
+int lastButtonState1 = 0;
+int lastButtonState2 = 0;
+int potValue = 0;
+
+unsigned long lastDebounceTime1 = 0;
+unsigned long lastDebounceTime2 = 0;
+unsigned long debounceDelay = 50;
 
 void setup() {
   pinMode(buttonPin1, INPUT);
@@ -23,29 +27,41 @@ void setup() {
 }
 
 void loop() {
-  buttonState1 = digitalRead(buttonPin1);
+  int reading1 = digitalRead(buttonPin1);
+  if (reading1 != lastButtonState1) {
+    lastDebounceTime1 = millis();
+  }
 
-  if (buttonState1 != lastButtonState1) {
-    if (buttonState1 == LOW) {
-      digitalWrite(ledPinR, !digitalRead(ledPinR));
+  if ((millis() - lastDebounceTime1) > debounceDelay) {
+    if (reading1 != buttonState1) {
+      buttonState1 = reading1;
+      if (buttonState1 == LOW) {
+        digitalWrite(ledPinR, !digitalRead(ledPinR));
+      }
     }
   }
 
-  buttonState2 = digitalRead(buttonPin2);
+  int reading2 = digitalRead(buttonPin2);
+  if (reading2 != lastButtonState2) {
+    lastDebounceTime2 = millis();
+  }
 
-  if (buttonState2 != lastButtonState2) {
-    if (buttonState2 == LOW) {
-      digitalWrite(ledPinG, !digitalRead(ledPinG));
+  if ((millis() - lastDebounceTime2) > debounceDelay) {
+    if (reading2 != buttonState2) {
+      buttonState2 = reading2;
+      if (buttonState2 == LOW) {
+        digitalWrite(ledPinG, !digitalRead(ledPinG));
+      }
     }
   }
 
   potValue = analogRead(potPin);
-  analogWrite(ledPinB, potValue / 4); 
+  analogWrite(ledPinB, potValue / 4);
 
   Serial.print("Potentiometer value (LED-B): ");
   Serial.println(potValue);
   delay(200);
 
-  lastButtonState1 = buttonState1;
-  lastButtonState2 = buttonState2;
+  lastButtonState1 = reading1;
+  lastButtonState2 = reading2;
 }
