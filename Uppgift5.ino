@@ -18,7 +18,8 @@ int potValue = 0;
 bool button1Enabled = true;
 bool button2Enabled = true;
 
-int currentPower = 0; 
+bool potentiometerEnabled = false;
+int currentPower = 0;
 
 void setup() {
   pinMode(LED_PIN_9, OUTPUT);
@@ -69,12 +70,17 @@ void loop() {
   lastButtonState_13 = reading_13;
 
   potValue = analogRead(POTENTIOMETER_PIN);
-  int pwmOutput = map(potValue, 0, 1023, 0, 255); 
-  analogWrite(PWM_OUTPUT_PIN, pwmOutput);
 
-  Serial.print("Potentiometer Value: ");
-  Serial.println(potValue);
-  delay(500);
+  // Check if potentiometer is enabled before using its value
+  if (potentiometerEnabled) {
+    int pwmOutput = map(potValue, 0, 1023, 0, 255);
+    analogWrite(PWM_OUTPUT_PIN, pwmOutput);
+
+    Serial.print("Potentiometer Value: ");
+    Serial.println(potValue);
+  }
+
+  delay(200);
 
   if (Serial.available() > 0) {
     String command = Serial.readStringUntil('\n');
@@ -110,18 +116,33 @@ void processCommand(String command) {
   } else if (command.startsWith("led power ")) {
     int targetPower = command.substring(10).toInt();
 
-    for (int i = 0; i <= 100; ++i) {
-      int intermediatePower = map(i, 0, 100, currentPower, targetPower);
-      analogWrite(PWM_OUTPUT_PIN, intermediatePower);
-      delay(20);
-    }
+    if (targetPower == -1) {
+      // Enable the potentiometer
+      potentiometerEnabled = true;
+      Serial.println("Potentiometer enabled");
+    } else {
+      // Disable the potentiometer
+      potentiometerEnabled = false;
+      Serial.println("Potentiometer disabled");
 
-    currentPower = targetPower; 
-    Serial.print("LED Power set to ");
-    Serial.println(targetPower);
-    delay(100);
+      // Ensure targetPower is within the valid range (1-10)
+      targetPower = constrain(targetPower, 1, 10);
+
+      int targetPWM = map(targetPower, 0, 10, 0, 255);
+
+      // Smoothly change the PWM value
+      unsigned long startTime = millis();
+      while (millis() - startTime <= 1000) {
+        int i = map(millis() - startTime, 0, 1000, currentPower, targetPWM);
+        analogWrite(PWM_OUTPUT_PIN, i);
+        delay(200);
+      }
+
+      currentPower = targetPWM;
+      Serial.print("LED Power set to ");
+      Serial.println(targetPower);
+    }
   } else {
     Serial.println("Unknown command");
-    delay(100);
   }
 }
