@@ -8,7 +8,7 @@ void loop() {
   // Läser av värdet från potentiometer 
   int sensorValue = analogRead(potPin); 
 
-  // Spänningen är 5v och arduino
+  // Spänningen är 5v
   // Formeln multiplicerar det analoga värdet med förhållandet mellan 5V och 1023
   float voltage = sensorValue * (5.0 / 1023.0); 
 
