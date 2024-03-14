@@ -3,7 +3,7 @@ const int buttonPin2 = 2;   // Knapp 2, flytta pin till 7 eller använd pin 2
 const int potPin = A0;      // Potentiometer
 const int ledPinR = 11;     // Röd LED
 const int ledPinG = 9;      // Grön LED
-const int ledPinB = 6;      // Blå LED
+const int ledPinB = 3;      // Blå LED
 
 int buttonState1 = 0;       // Knapp 1 aktuellt tillstånd
 int buttonState2 = 0;       // Knapp 2 aktuellt tillstånd
