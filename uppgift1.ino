@@ -1,7 +1,8 @@
 const int redLedPin = 11;  
 const int greenLedPin = 9; 
-const int blueLedPin = 3;  
+const int blueLedPin = 3; //flytta till led pin 3 till 6 
 
+// definierar led pinsen som output.
 void setup() {
   pinMode(redLedPin, OUTPUT);
   pinMode(greenLedPin, OUTPUT);
@@ -9,9 +10,9 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(redLedPin, HIGH);
-  delay(1000);
-  digitalWrite(redLedPin, LOW);
+  digitalWrite(redLedPin, HIGH); // tänder röda lampan
+  delay(1000); // vänta 1 sekund
+  digitalWrite(redLedPin, LOW); // släcker röda
 
   digitalWrite(greenLedPin, HIGH);
   delay(1000);
